@@ -1,30 +1,10 @@
-
+require('dotenv').config()
 const http = require('http')
 const express = require('express')
 const app = express()
 const cors = require('cors') // muista backendin baseUrl -> frontin axios!
-const mongoose = require('mongoose')
-
-const blogSchema = mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number
-})
-
-
-const Blog = mongoose.model('Blog', blogSchema)
-
-if (process.argv.length<3) {
-  console.log('give password as argument')
-  process.exit(1)
-}
-
-const password = process.argv[2]
-const mongoUrl = `mongodb+srv://fullstack:${password}@cluster0.cwjgrzg.mongodb.net/bloglistApp?retryWrites=true&w=majority`
-
-mongoose.set('strictQuery', false)
-mongoose.connect(mongoUrl)
+//const mongoose = require('mongoose')
+const Blog = require('./models/blog')
 
 app.use(cors()) //sallii kaikki pyynnöt kaikkiin express routeihin
 app.use(express.json()) //json parseri
