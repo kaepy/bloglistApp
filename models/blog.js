@@ -5,6 +5,7 @@ mongoose.set('strictQuery', false)
 const mongoUrl = process.env.MONGODB_URI
 
 console.log('connecting to', mongoUrl)
+
 mongoose.connect(mongoUrl)
   .then(result => {
     console.log('connected to MongoDB')
@@ -14,7 +15,11 @@ mongoose.connect(mongoUrl)
   })
 
 const blogSchema = new mongoose.Schema({
-  title: String,
+  title: {
+    type: String,
+    minlength: 5,
+    required: true
+  },
   author: String,
   url: String,
   likes: Number

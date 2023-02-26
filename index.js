@@ -1,9 +1,7 @@
 require('dotenv').config()
-const http = require('http')
 const express = require('express')
 const app = express()
 const cors = require('cors') // muista backendin baseUrl -> frontin axios!
-//const mongoose = require('mongoose')
 const Blog = require('./models/blog')
 
 app.use(cors()) //sallii kaikki pyynnöt kaikkiin express routeihin
@@ -21,32 +19,6 @@ const requestLogger = (request, response, next) => {
 app.use(requestLogger)
 
 /*
-let blogs = [
-  {
-    id: 1,
-    author: "Person1",
-    title: "HTML is easy",
-    url: "url1",
-    votes: 0
-  },
-  {
-    id: 2,
-    author: "Person2",
-    title: "HTML is hard",
-    url: "url2",
-    votes: 2
-  },
-  {
-    id: 3,
-    author: "Person3",
-    title: "HTML is medium",
-    url: "url3",
-    votes: 3
-  }
-]
-*/
-
-/*
 // request sisältää kaikki HTTP-pyynnön tiedot: GET
 // response määrittää miten pyyntöön vastataan: SEND
 app.get('/', (request, response) => {
@@ -57,17 +29,24 @@ app.get('/api/blogs', (request, response) => {
   response.json(blogs)
 })
 
-app.get('/api/blogs/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const blog = blogs.find(blog => blog.id === id)
-  response.json(blog)
+app.get('/api/blogs/:id', (request, response, next) => {
+  Blog.findById(request.params.id)
+    .then(blog => {
+      if (blog) {
+        response.json(blog)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
-app.delete('/api/blogs/:id', (request, response) => {
-  const id = Number(request.params.id)
-  blogs = blogs.filter(blog => blog.id !== id)
-
-  response.status(204).end()
+app.delete('/api/blogs/:id', (request, response, next) => {
+  Blog.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 const generateId = () => {
@@ -79,6 +58,9 @@ const generateId = () => {
 
 app.post('/api/blogs', (request, response) => {
   const body = request.body
+  if (body.title === undefined) {
+    return response.status(400).json({ error: 'title missing' })
+  }
 
   if (!body.title) {
     return response.status(400).json({ 
@@ -98,8 +80,28 @@ app.post('/api/blogs', (request, response) => {
 
   response.json(blog)
 })
-*/
 
+app.put('/api/blogs/:id', (request, response, next) => {
+  const {title, author, url, likes} = request.body
+
+  const blog = {
+    title: blog.title,
+    author: blog.author,
+    url: blog.url,
+    likes: blog.likes,
+  }
+
+  Blog.findByIdAndUpdate(
+    request.params.id, 
+    {title, author, url, likes},
+    { new: true, runValidator: true, context: 'query' }
+  )
+    .then(updatedBlog => {
+      response.json(updatedBlog)
+    })
+    .catch(error => next(error))
+})
+*/
 
 app.get('/api/blogs', (request, response) => {
   Blog
@@ -110,7 +112,7 @@ app.get('/api/blogs', (request, response) => {
 })
 
 
-app.post('/api/blogs', (request, response) => {
+app.post('/api/blogs', (request, response, next) => {
   const blog = new Blog(request.body)
 
   blog
@@ -118,6 +120,7 @@ app.post('/api/blogs', (request, response) => {
     .then(result => {
       response.status(201).json(result)
     })
+    .catch(error => next(error))
 })
 
 
@@ -133,6 +136,14 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+// olemattomien osoitteiden käsittely
+app.use(unknownEndpoint)
+
+// virheellisten pyyntöjen käsittely
 app.use(errorHandler)
 
 
