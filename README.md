@@ -56,18 +56,18 @@
 **
 - Backend repon luonti
 - Luodaan node-sovellus
-    - npm init
-    - index.js: `console.log('hello world')`
-    - node index.js
-    - package.json konffaus
-    - npm start
+  - npm init
+  - index.js: `console.log('hello world')`
+  - node index.js
+  - package.json konffaus
+   - npm start
 - Expressin käyttöönotto
-    - npm install express
-    - .gitignore node_modules
+  - npm install express
+  - .gitignore node_modules
 - Nodemonin käyttöönotto
-    - npm install --save-dev nodemon
-    - package.json: `"dev": "nodemon index.js",`
-    - npm run dev
+  - npm install --save-dev nodemon
+  - package.json: `"dev": "nodemon index.js",`
+  - npm run dev
 - Kovakoodatun datan määrittely
   - Data JS olioon
 - HTTP pyyntöjen määrittely 
@@ -75,8 +75,8 @@
   - HTTP GET :id json data (huom! muuttuja id on merkkijono ja olion id numero)
   - HTTP DELETE 
 - Rest-client testien käyttöönotto
-    - asenna Rest Client plugari VSCodeen
-    - requests/get_all_files.rest: GET http://localhost:3001/api/notes/
+  - asenna Rest Client plugari VSCodeen
+  - requests/get_all_files.rest: GET http://localhost:3001/api/notes/
 - Datan vastaanottaminen
   - json-parseri käyttöön: `app.use(express.json())`
   - HTTP POST-pyyntö
@@ -89,13 +89,25 @@
 - Oteaan ympäristömuuttujassa määritelty portti käyttöön
   - `const PORT = process.env.PORT || 3001`
 - Herokun setuppaus
-    - [herokun asennus ympäristöön](https://devcenter.heroku.com/articles/heroku-cli)
-    - `heroku login`
-    - Procfilen luonti: `web: npm start`
-    - `heroku create`
-    - `git push heroku main`
-    - `heroku ps:scale web=1`
-    - `heroku open`
+  - [herokun asennus ympäristöön](https://devcenter.heroku.com/articles/heroku-cli)
+  - `heroku login`
+  - Procfilen luonti: `web: npm start`
+  - `heroku create`
+  - `git push heroku main`
+  - `heroku ps:scale web=1`
+  - `heroku open`
+- Backend tuotantoon
+  - git push heroku main
+  - heroku logs -t
+- Node-sovelluksen debuggaus
+  - Chromen developer-konsoli
+  - `node --inspect index.js`
+- MongoDB setuppaus
+    - npm install mongoose
+    - app.js: 
+    - Heroku config vars: MONGODB_URI & PORT
+- 
+
 
 - Konsolin tulostelu
     - utils/logger.js: info & error
@@ -128,9 +140,7 @@
     - sovelluksen loggauksen käyttöönotto
     - app.js: middwaren käyttöönotto
 
-- Herokun setuppaus
-    - Procfilen luonti: web: npm start
-    - heroku create
+
 - Backend tuotantoon
     - git push heroku main
     - heroku logs -t
