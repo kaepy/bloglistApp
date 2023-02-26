@@ -63,8 +63,8 @@ app.post('/api/blogs', (request, response) => {
   }
 
   if (!body.title) {
-    return response.status(400).json({ 
-      error: 'title missing' 
+    return response.status(400).json({
+      error: 'title missing'
     })
   }
 
@@ -92,7 +92,7 @@ app.put('/api/blogs/:id', (request, response, next) => {
   }
 
   Blog.findByIdAndUpdate(
-    request.params.id, 
+    request.params.id,
     {title, author, url, likes},
     { new: true, runValidator: true, context: 'query' }
   )
