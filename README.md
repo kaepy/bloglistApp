@@ -57,10 +57,36 @@
 - Backend repon luonti
 - Luodaan node-sovellus
     - npm init
-    - index.js: console.log('hello world')
+    - index.js: `console.log('hello world')`
     - node index.js
     - package.json konffaus
     - npm start
+- Expressin käyttöönotto
+    - npm install express
+    - .gitignore node_modules
+- Nodemonin käyttöönotto
+    - npm install --save-dev nodemon
+    - package.json: `"dev": "nodemon index.js",`
+    - npm run dev
+- Kovakoodatun datan määrittely
+  - Data JS olioon
+- HTTP pyyntöjen määrittely 
+  - HTTP GET all json data
+  - HTTP GET :id json data (huom! muuttuja id on merkkijono ja olion id numero)
+  - HTTP DELETE 
+- Rest-client testien käyttöönotto
+    - asenna Rest Client plugari VSCodeen
+    - requests/get_all_files.rest: GET http://localhost:3001/api/notes/
+- Datan vastaanottaminen
+  - json-parseri käyttöön: `app.use(express.json())`
+  - HTTP POST-pyyntö
+- ???
+- Cors middleware käyttöönotto
+    - npm install cors
+    - app.js: middwaren käyttöönotto
+- requestLoggerin käyttöönotto
+- Error handlerin käyttöönotto
+
 - Konsolin tulostelu
     - utils/logger.js: info & error
 - Web-palvelimen määrittely
@@ -76,23 +102,12 @@
     - npx eslint index.js
     - package.json: "lint": "eslint ."
     - npm run lint
-- Kovakoodatun datan määrittely
-- Nodemonin käyttöönotto
-    - npm install --save-dev nodemon
-    - node_modules/.bin/nodemon index.js
-    - package.json: "dev": "nodemon index.js",
-    - npm run dev
-- Expressin käyttöönotto
-    - npm install express
-    - .gitignore node_modules
 - Tietojen näyttäminen
     - controllers/files.js: GET All
     - app.js: route middlewaren käyttöönotto
     - files.js: GET ID
     - utils/middleware.js: virheidenhallinta
-- Rest-client testien käyttöönotto
-    - requests/get_all_files.rest: GET http://localhost:3001/api/notes/
-    - get_file.rest
+
 - Tiedon poistaminen
     - files.js: DELETE ID
     - delete_file.rest
@@ -102,9 +117,7 @@
 - Morgan middlewaren käyttöönotto
     - sovelluksen loggauksen käyttöönotto
     - app.js: middwaren käyttöönotto
-- Cors middleware käyttöönotto
-    - npm install cors
-    - app.js: middwaren käyttöönotto
+
 - Herokun setuppaus
     - Procfilen luonti: web: npm start
     - heroku create
