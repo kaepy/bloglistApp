@@ -86,6 +86,16 @@
     - app.js: middwaren käyttöönotto
 - requestLoggerin käyttöönotto
 - Error handlerin käyttöönotto
+- Oteaan ympäristömuuttujassa määritelty portti käyttöön
+  - `const PORT = process.env.PORT || 3001`
+- Herokun setuppaus
+    - [herokun asennus ympäristöön](https://devcenter.heroku.com/articles/heroku-cli)
+    - `heroku login`
+    - Procfilen luonti: `web: npm start`
+    - `heroku create`
+    - `git push heroku main`
+    - `heroku ps:scale web=1`
+    - `heroku open`
 
 - Konsolin tulostelu
     - utils/logger.js: info & error

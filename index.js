@@ -1,22 +1,30 @@
 
+const http = require('http')
 const express = require('express')
 const app = express()
 const cors = require('cors') // muista backendin baseUrl -> frontin axios!
-//const mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-/*
 const blogSchema = mongoose.Schema({
   title: String,
   author: String,
   url: String,
   likes: Number
 })
-*/
 
-//const Blog = mongoose.model('Blog', blogSchema)
 
-//const mongoUrl = 'mongodb://localhost/bloglist'
-//mongoose.connect(mongoUrl)
+const Blog = mongoose.model('Blog', blogSchema)
+
+if (process.argv.length<3) {
+  console.log('give password as argument')
+  process.exit(1)
+}
+
+const password = process.argv[2]
+const mongoUrl = `mongodb+srv://fullstack:${password}@cluster0.cwjgrzg.mongodb.net/bloglistApp?retryWrites=true&w=majority`
+
+mongoose.set('strictQuery', false)
+mongoose.connect(mongoUrl)
 
 app.use(cors()) //sallii kaikki pyynnöt kaikkiin express routeihin
 app.use(express.json()) //json parseri
@@ -32,6 +40,7 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger)
 
+/*
 let blogs = [
   {
     id: 1,
@@ -55,7 +64,9 @@ let blogs = [
     votes: 3
   }
 ]
+*/
 
+/*
 // request sisältää kaikki HTTP-pyynnön tiedot: GET
 // response määrittää miten pyyntöön vastataan: SEND
 app.get('/', (request, response) => {
@@ -107,8 +118,9 @@ app.post('/api/blogs', (request, response) => {
 
   response.json(blog)
 })
+*/
 
-/*
+
 app.get('/api/blogs', (request, response) => {
   Blog
     .find({})
@@ -116,8 +128,8 @@ app.get('/api/blogs', (request, response) => {
       response.json(blogs)
     })
 })
-*/
-/*
+
+
 app.post('/api/blogs', (request, response) => {
   const blog = new Blog(request.body)
 
@@ -127,7 +139,7 @@ app.post('/api/blogs', (request, response) => {
       response.status(201).json(result)
     })
 })
-*/
+
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
@@ -142,6 +154,7 @@ const errorHandler = (error, request, response, next) => {
 }
 
 app.use(errorHandler)
+
 
 // app muuttujaan sijoitettu http-palvelin kuuntelee porttiin tulevia HTTP-pyyntöjä
 const PORT = process.env.PORT || 3003
