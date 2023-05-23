@@ -287,7 +287,7 @@ describe('most likes', () => {
       likes: 17
     }
 
-   //console.log('4.7*', result)
+    //console.log('4.7*', result)
 
     expect(result).toEqual(testData)
   })

@@ -44,7 +44,7 @@ const mostBlogs = (blogs) => {
   })
   //console.log('result', result)
 
-  const mostBlogs = result.reduce((max, author) => max.blogs > author.blogs ? max : author)
+  const mostBlogs = result.reduce((max, current) => max.blogs > current.blogs ? max : current)
   //console.log('mostBlogs', mostBlogs)
 
   return mostBlogs
@@ -70,7 +70,7 @@ const mostLikes = (blogs) => {
   })
   //console.log('result', result)
 
-  const mostLikes = result.reduce((max, author) => max.likes > author.likes ? max : author)
+  const mostLikes = result.reduce((max, current) => max.likes > current.likes ? max : current)
   //console.log('mostLikes', mostLikes)
 
   return mostLikes

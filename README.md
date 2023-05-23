@@ -212,3 +212,15 @@
     - .eslintrc.js
     - Procfile
     + README.md
+
+### Full stack -ohjelmointi on todella hankalaa, ja sen takia lupaan hyödyntää kaikkia ohjelmointia helpottavia keinoja:
+
+- pidän selaimen konsolin koko ajan auki
+- tarkkailen säännöllisesti selaimen network-välilehdeltä, että frontendin ja backendin välinen kommunikaatio tapahtuu oletusteni mukaan
+- tarkkailen säännöllisesti palvelimella olevan datan tilaa, ja varmistan että frontendin lähettämä data siirtyy sinne kuten oletin
+- pidän silmällä tietokannan tilaa: varmistan että backend tallentaa datan sinne oikeaan muotoon
+- etenen pienin askelin
+- käytän koodissa ja testeissä runsaasti `console.log`-komentoja varmistamaan sen, *että varmasti ymmärrän jokaisen kirjoittamani rivin, sekä etsiessäni koodista tai testeistä mahdollisia ongelman aiheuttajia*
+- jos koodini ei toimi, en kirjoita enää yhtään lisää koodia, vaan alan poistamaan toiminnan rikkoneita rivejä tai palaan suosiolla tilanteeseen, missä koodi vielä toimi
+- *jos testit eivät mene läpi, varmistan että testien testaama toiminnallisuus varmasti toimii sovelluksessa*
+- kun kysyn apua kurssin Discord- tai Telegram-kanavalla, tai muualla internetissä, muotoilen kysymyksen järkevästi, esim. [täällä](https://fullstackopen.com/en/part0/general_info#how-to-ask-help-in-discord-telegam) esiteltyyn tapaan
