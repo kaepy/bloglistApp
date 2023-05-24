@@ -74,13 +74,6 @@ describe('when there is initially some blogs saved', () => {
       expect(response.body.likes).toBe(0)
     })
 
-    /*
-    4.12*: blogilistan testit, step 5
-    Tee testit blogin lisäämiselle eli osoitteeseen /api/blogs tapahtuvalle HTTP POST ‑pyynnölle jotka varmistavat, että jos uusi blogi ei sisällä kenttää title tai kenttää url, pyyntöön vastataan statuskoodilla 400 Bad Request.
-  
-    Laajenna toteutusta siten, että testit menevät läpi.
-    */
-
     test('fails with statuscode 400 if title or url is invalid', async () => {
       const newBlog = {
         author: 'Person999',
@@ -99,6 +92,15 @@ describe('when there is initially some blogs saved', () => {
 
     })
   })
+
+  /*
+  4.13: blogilistan testit, step 5
+  Toteuta sovellukseen mahdollisuus yksittäisen blogin poistoon.
+
+  Käytä async/awaitia. Noudata operaation HTTP-rajapinnan suhteen RESTful-käytänteitä.
+
+  Toteuta ominaisuudelle myös testit.
+  */
 
   describe('deletion of a blog', () => {
     test('succeeds with status code 204 if id is valid', async () => {
