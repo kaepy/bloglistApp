@@ -35,6 +35,11 @@ describe('when there is initially some blogs saved', () => {
 })
 
 describe('addition of a new note', () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+    await Blog.insertMany(helper.initialBlogs)
+  })
+
   test('succeed with valid data', async () => {
     const newBlog = {
       title: 'Test is test na naaa naa na na',
@@ -56,13 +61,6 @@ describe('addition of a new note', () => {
     expect(titles).toContain('Test is test na naaa naa na na')
   })
 
-  /* 4.11 blogilistan testit, step 3
-  4.11*: blogilistan testit, step4
-  Tee testi, joka varmistaa, että jos kentälle likes ei anneta arvoa, asetetaan sen arvoksi 0. Muiden kenttien sisällöstä ei tässä tehtävässä vielä välitetä.
-
-  Laajenna ohjelmaa siten, että testi menee läpi.
-  */
-
   test('likes default value set to 0 if no other value given', async () => {
     const newBlog = {
       title: 'Test zero',
@@ -76,9 +74,34 @@ describe('addition of a new note', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    console.log(response.body)
+    // console.log(response.body)
 
     expect(response.body.likes).toBe(0)
+  })
+
+  /*
+  4.12*: blogilistan testit, step 5
+  Tee testit blogin lisäämiselle eli osoitteeseen /api/blogs tapahtuvalle HTTP POST ‑pyynnölle jotka varmistavat, että jos uusi blogi ei sisällä kenttää title tai kenttää url, pyyntöön vastataan statuskoodilla 400 Bad Request.
+
+  Laajenna toteutusta siten, että testit menevät läpi.
+  */
+
+  test('fails with statuscode 400 if title or url is invalid', async () => {
+    const newBlog = {
+      author: 'Person999',
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    // console.log(blogsAtEnd)
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
   })
 })
 
