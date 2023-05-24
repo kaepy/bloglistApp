@@ -96,7 +96,6 @@ describe('when there is initially some blogs saved', () => {
   /*
   4.13: blogilistan testit, step 5
   Toteuta sovellukseen mahdollisuus yksittäisen blogin poistoon.
-
   Käytä async/awaitia. Noudata operaation HTTP-rajapinnan suhteen RESTful-käytänteitä.
 
   Toteuta ominaisuudelle myös testit.
