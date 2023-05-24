@@ -34,12 +34,6 @@ describe('when there is initially some blogs saved', () => {
   })
 })
 
-/* 4.10 blogilistan testit, step 3
-  Tee testi, joka varmistaa, että sovellukseen voi lisätä blogeja osoitteeseen /api/blogs tapahtuvalla HTTP POST ‑pyynnöllä. Testaa ainakin, että blogien määrä kasvaa yhdellä. Voit myös varmistaa, että oikeansisältöinen blogi on lisätty järjestelmään.
-
-  Kun testi on valmis, refaktoroi operaatio käyttämään promisejen sijaan async/awaitia.
-  */
-
 describe('addition of a new note', () => {
   test('succeed with valid data', async () => {
     const newBlog = {
@@ -60,6 +54,31 @@ describe('addition of a new note', () => {
 
     const titles = blogsAtEnd.map(b => b.title)
     expect(titles).toContain('Test is test na naaa naa na na')
+  })
+
+  /* 4.11 blogilistan testit, step 3
+  4.11*: blogilistan testit, step4
+  Tee testi, joka varmistaa, että jos kentälle likes ei anneta arvoa, asetetaan sen arvoksi 0. Muiden kenttien sisällöstä ei tässä tehtävässä vielä välitetä.
+
+  Laajenna ohjelmaa siten, että testi menee läpi.
+  */
+
+  test('likes default value set to 0 if no other value given', async () => {
+    const newBlog = {
+      title: 'Test zero',
+      author: 'Person999',
+      url: 'url999',
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    console.log(response.body)
+
+    expect(response.body.likes).toBe(0)
   })
 })
 
