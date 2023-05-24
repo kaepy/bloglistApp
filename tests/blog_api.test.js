@@ -48,11 +48,7 @@ describe('when there is initially some blogs saved', () => {
     const response = await api.get('/api/blogs')
       .expect(200)
 
-    console.log(response.body)
-
-    response.body.forEach(blog => {
-      expect(blog.id).toBeDefined()
-    })
+    response.body.forEach(blog => expect(blog.id).toBeDefined())
   })
 })
 
