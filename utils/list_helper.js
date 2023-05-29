@@ -1,9 +1,9 @@
 const _ = require('lodash')
 
 // 4.3 DUMMY TEST
-const dummy = (blogs) => {
-  return 1
-}
+//const dummy = (blogs) => {
+//  return 1
+//}
 
 // 4.4 TOTAL LIKES CASES
 const totalLikes = (blogs) => {
@@ -92,7 +92,7 @@ console.log(result)
 */
 
 module.exports = {
-  dummy,
+  //dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
