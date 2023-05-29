@@ -21,6 +21,7 @@ blogsRouter.get('/:id', async (request, response) => {
   }
 })
 
+/* refaktoroidaan middlewareksi
 // Eristää tokenin headerista authorizationin
 const getTokenFrom = request => {
   const authorization = request.get('authorization')
@@ -29,6 +30,7 @@ const getTokenFrom = request => {
   }
   return null
 }
+*/
 
 // Blogin luominen
 blogsRouter.post('/', async (request, response) => {
@@ -37,7 +39,8 @@ blogsRouter.post('/', async (request, response) => {
   //const user = await User.findOne({})
 
   // tokenin oikeellisuuden tarkistus ja dekaadaus eli palauttaa olion jonka perusteella token on laadittu. dekoodatun olion sisällä on kentät username ja id eli se kertoo palvelimelle kuka pyynnön on tehnyt.
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  //const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
   // Jos token on muuten kunnossa, mutta tokenista dekoodattu olio ei sisällä käyttäjän identiteettiä (eli decodedToken.id ei ole määritelty), palautetaan virheestä kertova statuskoodi 401 unauthorized ja kerrotaan syy vastauksen bodyssä
   if (!decodedToken.id) {
