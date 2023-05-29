@@ -1,5 +1,6 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 const initialBlogs = [
   {
@@ -48,6 +49,31 @@ const usersInDb = async () => {
   return users.map(user => user.toJSON())
 }
 
+const testUserToken = async () => {
+  const users = await usersInDb()
+  //console.log(users)
+
+  const testUser = users[0]
+  //console.log('testUser: ', testUser)
+
+  const userForToken = {
+    username: testUser.username,
+    id: testUser.id,
+  }
+
+  // Salasanaa ei tarvita - pelkkä token riittää
+  // Epäselvää miksi tämä nyt riittää pelkästään
+  const token = jwt.sign(
+    userForToken,
+    process.env.SECRET,
+    { expiresIn: 60*60 }
+  )
+
+  //console.log('helper token: ', token)
+
+  return token
+}
+
 module.exports = {
-  initialBlogs, initialUsers, nonExistingId, blogsInDb, usersInDb
+  initialBlogs, initialUsers, nonExistingId, blogsInDb, usersInDb, testUserToken
 }

@@ -48,10 +48,11 @@ describe('when there is initially some blogs saved', () => {
         likes: 999,
       }
 
-      //const authToken = await helper.testUserToken()
+      const authToken = await helper.testUserToken()
 
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${authToken}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -70,8 +71,11 @@ describe('when there is initially some blogs saved', () => {
         url: 'url999',
       }
 
+      const authToken = await helper.testUserToken()
+
       const response = await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${authToken}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
