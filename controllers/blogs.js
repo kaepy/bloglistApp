@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
   //const blogs = await Blog.find({})
@@ -20,11 +21,29 @@ blogsRouter.get('/:id', async (request, response) => {
   }
 })
 
+// Eristää tokenin headerista authorizationin
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+  return null
+}
+
 // Blogin luominen
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
-  const user = await User.findOne({})
+  //const user = await User.findOne({})
+
+  // tokenin oikeellisuuden tarkistus ja dekaadaus eli palauttaa olion jonka perusteella token on laadittu. dekoodatun olion sisällä on kentät username ja id eli se kertoo palvelimelle kuka pyynnön on tehnyt.
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+
+  // Jos token on muuten kunnossa, mutta tokenista dekoodattu olio ei sisällä käyttäjän identiteettiä (eli decodedToken.id ei ole määritelty), palautetaan virheestä kertova statuskoodi 401 unauthorized ja kerrotaan syy vastauksen bodyssä
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+  const user = await User.findById(decodedToken.id)
 
   //console.log('user', user)
   //console.log('_id', user._id)
