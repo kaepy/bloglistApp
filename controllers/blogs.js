@@ -72,8 +72,29 @@ blogsRouter.post('/', async (request, response) => {
 
 // Blogin poistaminen
 blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id)
-  response.status(204).end()
+  // blogi on hyvä hakea erikseen jos olis tarvetta tehdä tarkastuksia että blogi ylipäätänsä löytyy
+  const blog = await Blog.findById(request.params.id)
+  //console.log('blog: ', blog)
+
+  const blogCreator = blog.user.toString()
+  console.log('blogCreator: ', blogCreator)
+
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  //console.log('decodedToken: ', decodedToken)
+
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+
+  const loggedUser = decodedToken.id
+  console.log('loggedUser: ', loggedUser)
+
+  if ( loggedUser === blogCreator ){
+    await Blog.findByIdAndRemove(request.params.id) // alkuperänen
+    return response.status(204).end() // alkuperänen
+  }
+
+  response.status(401).json({ error: 'invalid' })
 })
 
 // Blogin muokkaaminen
