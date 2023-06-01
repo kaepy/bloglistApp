@@ -8,24 +8,32 @@ const initialBlogs = [
     author: 'Person3',
     url: 'url3',
     likes: 3,
+    user: null
   },
   {
     title: 'HTML is low',
     author: 'Person1',
     url: 'url1',
     likes: 0,
+    user: null
   },
   {
     title: 'HTML is high',
     author: 'Person2',
     url: 'url2',
     likes: 1,
+    user: null
   }
 ]
 
 const initialUsers = [
   {
     username: 'testi',
+    name: 'testi testinen',
+    password: 'salasala',
+  },
+  {
+    username: 'fakeUser',
     name: 'testi testinen',
     password: 'salasala'
   },
@@ -50,25 +58,28 @@ const usersInDb = async () => {
 }
 
 const testUserToken = async () => {
+  // haetaan kaikki userit testikannasta
   const users = await usersInDb()
-  //console.log(users)
+  //console.log('users : ', users)
 
+  // käytetään ekaa käyttäjää
   const testUser = users[0]
-  //console.log('testUser: ', testUser)
+  //console.log('testUser : ', testUser)
 
+  // apumuuttuja tokenin luomista varten
   const userForToken = {
     username: testUser.username,
     id: testUser.id,
   }
+  //console.log('userForToken: ', userForToken)
 
   // Salasanaa ei tarvita - pelkkä token riittää
-  // Epäselvää miksi tämä nyt riittää pelkästään
+  // Luodaan metodin avulla token
   const token = jwt.sign(
     userForToken,
     process.env.SECRET,
-    { expiresIn: 60*60 }
+    { expiresIn: 60 * 60 }
   )
-
   //console.log('helper token: ', token)
 
   return token

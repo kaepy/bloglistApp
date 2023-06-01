@@ -35,6 +35,7 @@ const getTokenFrom = request => {
 blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   //console.log('request: ', request)
 
+  // poimitaan lisättävän blogin tiedot requestista
   const body = request.body
   //console.log('body: ', body) // { author: 'HHHHHH', title: 'HHHHHH', url: 'HHHHHH', likes: 1 }
 
@@ -53,9 +54,12 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   })
   //console.log('blog', blog)
 
+  // Mitä tässä tapahtuu?
+  // To save the current state of the blog object to the database
   const savedBlog = await blog.save()
   //console.log('savedBlog ', savedBlog)
 
+  // lisää blogin käyttäjän tietoihin muiden blogien seuraksi
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
@@ -65,21 +69,27 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
 // Blogin poistaminen
 blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
   // blogi on hyvä hakea erikseen jos olis tarvetta tehdä tarkastuksia että blogi ylipäätänsä löytyy
+  // haetaan requestin id:n perusteella blogin tiedot
   const blog = await Blog.findById(request.params.id)
   //console.log('blog: ', blog)
+  //console.log('blog.user: ', blog.user)
+  //console.log('blog.user.STRING: ', blog.user.toString())
 
+  // poimitaan blogin tiedoista blogin luojan id
   const blogCreator = blog.user.toString()
   //console.log('blogCreator: ', blogCreator)
 
   // get user from request object
   const user = request.user
   //console.log('blogs/user: ', user)
-  //console.log('user._id: ', user._id) // undefined
-  //console.log('user._id: ', user.blogs) // undefined
+  //console.log('user._id: ', user._id)
+  //console.log('user._id: ', user.blogs)
 
+  // poimitaan kirjautuneen käyttäjän id
   const loggedUser = user._id.toString()
   //console.log('loggedUser: ', loggedUser)
 
+  // tarkastellaan onko blogin luonut käyttäjä ja kirjautunut käyttäjä sama
   if ( loggedUser === blogCreator ){
     await Blog.findByIdAndRemove(request.params.id) // alkuperänen
     return response.status(204).end() // alkuperänen

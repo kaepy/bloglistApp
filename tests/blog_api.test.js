@@ -48,20 +48,25 @@ describe('when there is initially some blogs saved', () => {
         likes: 999,
       }
 
+      // Luo kirjautuneen käyttäjän ja sille tokenin joka otetaan talteen
       const authToken = await helper.testUserToken()
 
-      await api
+      const response = await api
         .post('/api/blogs')
         .set('Authorization', `Bearer ${authToken}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
 
+      // tarkistetaan että kannassa on yksi blogi enemmän
       const blogsAtEnd = await helper.blogsInDb()
       expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
+      // tarkistetaan että uusi blogi löytyy kannasta
       const titles = blogsAtEnd.map(b => b.title)
       expect(titles).toContain('Test is test na naaa naa na na')
+
+      expect(response.body.user).not.toBeNull()
     })
 
     test('likes default value set to 0 if no other value given', async () => {
@@ -90,8 +95,11 @@ describe('when there is initially some blogs saved', () => {
         author: 'Person999',
       }
 
+      const authToken = await helper.testUserToken()
+
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${authToken}`)
         .send(newBlog)
         .expect(400)
 
@@ -105,30 +113,58 @@ describe('when there is initially some blogs saved', () => {
   })
 
   describe('deletion of a blog', () => {
+
+    // HUOM! TESTI RIKKI!!! initialBlogs datasta puuttuu User tiedot joita voisi verrata blogsRouter.delete:ssa tokenin user tietoon
     test('succeeds with status code 204 if id is valid', async () => {
+      // Tehdään kannasta kopio alkutilanteelle ja poimitaan mikä blogi poistetaan
       const blogsAtStart = await helper.blogsInDb()
+      //console.log('blogsAtStart: ', blogsAtStart)
+
       const blogToDelete = blogsAtStart[0]
+      //console.log('blogToDelete: ', blogToDelete.id)
+
+      // Luo kirjautuneen käyttäjän ja sille tokenin joka otetaan talteen
+      const authToken = await helper.testUserToken()
+      //console.log('authToken: ', authToken)
 
       await api
         .delete(`/api/blogs/${blogToDelete.id}`)
+        .set('Authorization', `Bearer ${authToken}`)
         .expect(204)
 
       const blogsAtEnd = await helper.blogsInDb()
 
+      // Tarkistetaan että kannassa on yksi blogi vähemmän
       expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
 
+      // Tarkistetaan että poistettua blogia ei enää löydy kannasta
       const titles = blogsAtEnd.map(r => r.title)
       expect(titles).not.toContain(blogToDelete.title)
     })
+
+    test('fails with statuscode 401 if token is missing', async () => {
+      // Tehdään kannasta kopio alkutilanteelle ja poimitaan mikä blogi poistetaan
+      const blogsAtStart = await helper.blogsInDb()
+      //console.log('blogsAtStart: ', blogsAtStart)
+
+      const blogToDelete = blogsAtStart[0]
+      //console.log('blogToDelete: ', blogToDelete)
+
+      await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .set('Authorization', 'Bearer ')
+        .expect(401)
+
+      const blogsAtEnd = await helper.blogsInDb()
+
+      // Tarkistetaan että kannassa on yhtä monta blogia
+      expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+      // Tarkistetaan ettei poistettu blogi löytyy kannasta
+      const titles = blogsAtEnd.map(r => r.title)
+      expect(titles).toContain(blogToDelete.title)
+    })
   })
-
-  /*
-  4.14*: blogilistan testit, step 2
-  Toteuta sovellukseen mahdollisuus yksittäisen blogin muokkaamiseen. Käytä async/awaitia.
-  Tarvitsemme muokkausta lähinnä likejen lukumäärän päivittämiseen. Toiminnallisuuden voi toteuttaa samaan tapaan kuin muistiinpanon päivittäminen toteutettiin osassa 3.
-
-  Toteuta ominaisuudelle myös testit.
-  */
 
   describe('modification of a blog', () => {
     test('succeeds with valid id', async () => {
@@ -159,6 +195,7 @@ describe('when there is initially some blogs saved', () => {
   describe('when there is initially one user at db', () => {
     beforeEach(async () => {
       await User.deleteMany({})
+      //await User.insertMany(helper.initialUsers)
 
       const passwordHash = await bcrypt.hash('sekret', 10)
       const user = new User({ username: 'root', passwordHash })
