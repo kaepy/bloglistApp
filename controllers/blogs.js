@@ -1,7 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
+const middleware = require('../utils/middleware')
 
 blogsRouter.get('/', async (request, response) => {
   //const blogs = await Blog.find({})
@@ -33,24 +32,17 @@ const getTokenFrom = request => {
 */
 
 // Blogin luominen
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
+  //console.log('request: ', request)
+
   const body = request.body
+  //console.log('body: ', body) // { author: 'HHHHHH', title: 'HHHHHH', url: 'HHHHHH', likes: 1 }
 
-  //const user = await User.findOne({})
-
-  // tokenin oikeellisuuden tarkistus ja dekaadaus eli palauttaa olion jonka perusteella token on laadittu. dekoodatun olion sisällä on kentät username ja id eli se kertoo palvelimelle kuka pyynnön on tehnyt.
-  //const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-  // Jos token on muuten kunnossa, mutta tokenista dekoodattu olio ei sisällä käyttäjän identiteettiä (eli decodedToken.id ei ole määritelty), palautetaan virheestä kertova statuskoodi 401 unauthorized ja kerrotaan syy vastauksen bodyssä
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
-
-  //console.log('user', user)
-  //console.log('_id', user._id)
-  //console.log('id', user._id.toString())
+  // get user from request object
+  const user = request.user
+  //console.log('blogs/user: ', user)
+  //console.log('user._id: ', user._id) // undefined
+  //console.log('user._id: ', user.blogs) // undefined
 
   const blog = new Blog({
     title: body.title,
@@ -59,11 +51,11 @@ blogsRouter.post('/', async (request, response) => {
     likes: body.likes || 0,
     user: user._id
   })
-
   //console.log('blog', blog)
 
   const savedBlog = await blog.save()
   //console.log('savedBlog ', savedBlog)
+
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
@@ -71,23 +63,22 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 // Blogin poistaminen
-blogsRouter.delete('/:id', async (request, response) => {
+blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
   // blogi on hyvä hakea erikseen jos olis tarvetta tehdä tarkastuksia että blogi ylipäätänsä löytyy
   const blog = await Blog.findById(request.params.id)
   //console.log('blog: ', blog)
 
   const blogCreator = blog.user.toString()
-  console.log('blogCreator: ', blogCreator)
+  //console.log('blogCreator: ', blogCreator)
 
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  //console.log('decodedToken: ', decodedToken)
+  // get user from request object
+  const user = request.user
+  //console.log('blogs/user: ', user)
+  //console.log('user._id: ', user._id) // undefined
+  //console.log('user._id: ', user.blogs) // undefined
 
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-
-  const loggedUser = decodedToken.id
-  console.log('loggedUser: ', loggedUser)
+  const loggedUser = user._id.toString()
+  //console.log('loggedUser: ', loggedUser)
 
   if ( loggedUser === blogCreator ){
     await Blog.findByIdAndRemove(request.params.id) // alkuperänen
