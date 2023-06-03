@@ -14,9 +14,11 @@ const User = require('../models/user')
 
 describe('when there is initially some blogs saved', () => {
   beforeEach(async () => {
+    // initialize blogs
     await Blog.deleteMany({})
     await Blog.insertMany(helper.initialBlogs)
 
+    // initialize users
     await User.deleteMany({})
     await User.insertMany(helper.initialUsers)
   })
@@ -113,8 +115,6 @@ describe('when there is initially some blogs saved', () => {
   })
 
   describe('deletion of a blog', () => {
-
-    // HUOM! TESTI RIKKI!!! initialBlogs datasta puuttuu User tiedot joita voisi verrata blogsRouter.delete:ssa tokenin user tietoon
     test('succeeds with status code 204 if id is valid', async () => {
       // Tehdään kannasta kopio alkutilanteelle ja poimitaan mikä blogi poistetaan
       const blogsAtStart = await helper.blogsInDb()

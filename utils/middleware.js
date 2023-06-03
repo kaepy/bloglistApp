@@ -47,6 +47,7 @@ const tokenExtractor = (request, response, next) => {
 
 const userExtractor = async (request, response, next) => {
   //console.log('middle request', request)
+
   // tarkistetaan tokenin oikeellisuus ja decoodataan tokenin tiedot auki käyttäjätietojen saamiseksi
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
   //console.log('decodedToken: ', decodedToken)

@@ -4,38 +4,47 @@ const jwt = require('jsonwebtoken')
 
 const initialBlogs = [
   {
-    title: 'HTML is medium',
-    author: 'Person3',
-    url: 'url3',
-    likes: 3,
-    user: null
+    title: 'The Lord of the Blogs',
+    author: 'J. R. R. Token',
+    url: 'loordi url',
+    likes: 42,
+    user:
+      {
+        _id: '647451ea7a78ae6fc9786135'
+      }
+    ,
+    _id: '6474f3b7e2ab2e8719835602',
+    __v: 0
   },
   {
-    title: 'HTML is low',
-    author: 'Person1',
-    url: 'url1',
-    likes: 0,
-    user: null
+    title: 'The Lego Lasse',
+    author: 'J. R. R. Token',
+    url: 'loordi url',
+    likes: 42,
+    user:
+      {
+        _id: '647451ea7a78ae6fc9786135'
+      }
+    ,
+    _id: '6474f4a8e2ab2e8719835612',
+    __v: 0
   },
-  {
-    title: 'HTML is high',
-    author: 'Person2',
-    url: 'url2',
-    likes: 1,
-    user: null
-  }
 ]
 
 const initialUsers = [
   {
     username: 'testi',
-    name: 'testi testinen',
-    password: 'salasala',
-  },
-  {
-    username: 'fakeUser',
-    name: 'testi testinen',
-    password: 'salasala'
+    name: 'Testi Testinen',
+    passwordHash: null,
+    blogs: [
+      {
+        _id: '6474f3b7e2ab2e8719835602'
+      },
+      {
+        _id: '6474f4a8e2ab2e8719835612'
+      }
+    ],
+    _id: '647451ea7a78ae6fc9786135'
   },
 ]
 
