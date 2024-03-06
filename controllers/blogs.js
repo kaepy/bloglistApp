@@ -57,6 +57,8 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   // Mitä tässä tapahtuu?
   // To save the current state of the blog object to the database
   const savedBlog = await blog.save()
+  await savedBlog.populate('user', { username: 1, name: 1 })
+
   //console.log('savedBlog ', savedBlog)
 
   // lisää blogin käyttäjän tietoihin muiden blogien seuraksi
@@ -90,7 +92,7 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) =
   //console.log('loggedUser: ', loggedUser)
 
   // tarkastellaan onko blogin luonut käyttäjä ja kirjautunut käyttäjä sama
-  if ( loggedUser === blogCreator ){
+  if (loggedUser === blogCreator) {
     await Blog.findByIdAndRemove(request.params.id) // alkuperänen
     return response.status(204).end() // alkuperänen
   }
@@ -102,14 +104,19 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) =
 blogsRouter.put('/:id', (request, response, next) => {
   const body = request.body
 
+  console.log('back-body,', body)
+
   const blog = {
     title: body.title,
     author: body.author,
     url: body.url,
     likes: body.likes,
+    user: body.user
   }
 
-  Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  console.log('back-request.params.id,', request.params.id)
+
+  Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).populate('user', { username: 1, name: 1 })
     .then(updatedBlog => {
       response.json(updatedBlog)
     })
